@@ -108,6 +108,6 @@ The display can be turned on by calling *powerup()*.
 
 ## License
 
-The HT16K33Bargraph library is licensed under the [MIT License](./LICENSE).
+The HT16K33Bargraph class is licensed under the [MIT License](./LICENSE).
 
 Copyright &copy; Tony Smith, 2015-17.
