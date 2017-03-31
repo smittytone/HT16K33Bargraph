@@ -1,3 +1,18 @@
+// CONSTANTS
+// HT16K33 registers and HT16K33-specific variables
+const HT16K33_REGISTER_DISPLAY_ON  = "\x81";
+const HT16K33_REGISTER_DISPLAY_OFF = "\x80";
+const HT16K33_REGISTER_SYSTEM_ON   = "\x21";
+const HT16K33_REGISTER_SYSTEM_OFF  = "\x20";
+const HT16K33_DISPLAY_ADDRESS      = "\x00";
+const HT16K33_I2C_ADDRESS          =  0x70;
+
+// Convenience constants for bar colours
+const LED_OFF = 0;
+const LED_RED = 1;
+const LED_YELLOW = 2;
+const LED_GREEN = 3;
+
 class HT16K33Bargraph {
 
     // Squirrel class for 24-bar bi-color LED bargraph display
@@ -8,27 +23,12 @@ class HT16K33Bargraph {
     // Availibility: Device
     // Copyright 2015-17 Tony Smith (@smittytone)
 
-    static VERSION = "1.0.0";
-
-    // HT16K33 registers and HT16K33-specific variables
-    static HT16K33_REGISTER_DISPLAY_ON  = "\x81";
-    static HT16K33_REGISTER_DISPLAY_OFF = "\x80";
-    static HT16K33_REGISTER_SYSTEM_ON   = "\x21";
-    static HT16K33_REGISTER_SYSTEM_OFF  = "\x20";
-    static HT16K33_DISPLAY_ADDRESS      = "\x00";
-    static HT16K33_I2C_ADDRESS          =  0x70;
-
-    // Convenience constants for bar colours
-    static LED_OFF = 0;
-    static LED_RED = 1;
-    static LED_YELLOW = 2;
-    static LED_GREEN = 3;
+    static VERSION = "1.0.1";
 
     // Class private properties
     _buffer = null;
     _led = null;
     _ledAddress = null;
-
     _barZeroByChip = true;
     _debug = false;
 
@@ -38,10 +38,7 @@ class HT16K33Bargraph {
         // 2. The I2C address from the datasheet (0x70)
         // 3. Boolean, set/unset for debugging messages
 
-        if (i2cbus == null) {
-            server.error("HT16K33Bar requires a non-null Imp I2C bus");
-            return null;
-        }
+        if (i2cbus == null) throw "HT16K33Bar requires a non-null Imp I2C bus";
 
         // Save bar graph's I2C details
         _led = i2cbus;
@@ -106,11 +103,11 @@ class HT16K33Bargraph {
 
         if (_barZeroByChip) {
             barNumber = 23 - barNumber;
-            for (local i = 23 ; i > barNumber ; --i) {
+            for (local i = 23 ; i > barNumber ; i--) {
                 _setBar(i, ledColor);
             }
         } else {
-            for (local i = 0 ; i < barNumber ; ++i) {
+            for (local i = 0 ; i < barNumber ; i++) {
                 _setBar(i, ledColor);
             }
         }
@@ -135,7 +132,6 @@ class HT16K33Bargraph {
             return null;
         }
 
-        clear();
         if (_barZeroByChip) barNumber = 23 - barNumber;
         _setBar(barNumber, ledColor);
         return this;
@@ -150,7 +146,7 @@ class HT16K33Bargraph {
     function draw() {
         // Takes the contents of internal buffer and writes it to the LED matrix
         local dataString = HT16K33_DISPLAY_ADDRESS;
-        for (local i = 0 ; i < 3 ; ++i) {
+        for (local i = 0 ; i < 3 ; i++) {
             // Each _buffer entry is a 16-bit value - convert to two 8-bit values to write
             dataString = dataString + (_buffer[i] & 0xFF).tochar() + (_buffer[i] >> 8).tochar();
         }

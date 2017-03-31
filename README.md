@@ -1,4 +1,4 @@
-# HT16K33Bargraph 1.0.0
+# HT16K33Bargraph 1.0.1
 
 Hardware driver for [Adafruit Bi-Color (Red/Green) 24-Bar Bargraph with I&sup2;C Backpack](https://www.adafruit.com/products/1721) based on the Holtek HT16K33 controller. The LED communicates over any imp I&sup2;C bus.
 
@@ -13,7 +13,7 @@ The passed imp I&sup2;C bus must be configured **before** the HT16K33Bargraph ob
 Optionally, you can pass `true` into the *debug* parameter. This will cause debugging information to be posted to the device log. This is disabled by default.
 
 ```squirrel
-#require "HT16K33Bargraph.class.nut:1.0.0"
+#require "HT16K33Bargraph.class.nut:1.0.1"
 
 // Enabled debugging
 hardware.i2c89.configure(CLOCK_SPEED_400_KHZ);
@@ -110,4 +110,4 @@ The display can be turned on by calling *powerup()*.
 
 The HT16K33Bargraph class is licensed under the [MIT License](./LICENSE).
 
-Copyright &copy; Tony Smith, 2015-17.
+Copyright Tony Smith, 2015-17.
