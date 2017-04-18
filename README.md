@@ -13,8 +13,6 @@ The passed imp I&sup2;C bus must be configured **before** the HT16K33Bargraph ob
 Optionally, you can pass `true` into the *debug* parameter. This will cause debugging information to be posted to the device log. This is disabled by default.
 
 ```squirrel
-#require "HT16K33Bargraph.class.nut:1.0.1"
-
 // Enabled debugging
 hardware.i2c89.configure(CLOCK_SPEED_400_KHZ);
 bargraph <- HT16K33Bargraph(hardware.i2c89, 0x70, true);
@@ -110,4 +108,4 @@ The display can be turned on by calling *powerup()*.
 
 The HT16K33Bargraph class is licensed under the [MIT License](./LICENSE).
 
-Copyright Tony Smith, 2015-17.
+Copyright &copy; Tony Smith, 2015-17.
