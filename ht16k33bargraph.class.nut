@@ -21,7 +21,7 @@ class HT16K33Bargraph {
     // https://www.adafruit.com/products/1721
     // Bus: I2C
     // Availibility: Device
-    // Copyright 2015-17 Tony Smith (@smittytone)
+    // Copyright (c) 2015-17 Tony Smith (@smittytone)
 
     static VERSION = "1.0.1";
 
@@ -65,6 +65,7 @@ class HT16K33Bargraph {
         // Returns: nothing
 
         local t = typeof barZeroByChip;
+
         if (t != "bool") {
             if (t == "float" || t == "integer") {
                 barZeroByChip = (barZeroByChip.tointeger() == 0) ? false : true;
@@ -146,6 +147,7 @@ class HT16K33Bargraph {
     function draw() {
         // Takes the contents of internal buffer and writes it to the LED matrix
         local dataString = HT16K33_DISPLAY_ADDRESS;
+
         for (local i = 0 ; i < 3 ; i++) {
             // Each _buffer entry is a 16-bit value - convert to two 8-bit values to write
             dataString = dataString + (_buffer[i] & 0xFF).tochar() + (_buffer[i] >> 8).tochar();
