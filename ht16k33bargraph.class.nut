@@ -102,6 +102,8 @@ class HT16K33Bargraph {
             return null;
         }
 
+        barNumber = barNumber.tointeger();
+
         if (_barZeroByChip) {
             barNumber = 23 - barNumber;
             for (local i = 23 ; i > barNumber ; i--) {
