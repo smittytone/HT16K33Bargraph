@@ -161,9 +161,20 @@ class HT16K33Bargraph {
     function setBrightness(brightness = 15) {
         // Called when the app changes the brightness
         // Default: 15
-        if (brightness > 15) brightness = 15;
-        if (brightness < 0) brightness = 0;
+        if (typeof brightness != "integer" && typeof brightness != "float") brightness = 15;
+        brightness = brightness.tointeger();
 
+        if (brightness > 15) {
+            brightness = 15;
+            if (_debug) server.error("HT16K33Matrix.setBrightness() brightness out of range (0-15)");
+        }
+
+        if (brightness < 0) {
+            brightness = 0;
+            if (_debug) server.error("HT16K33Matrix.setBrightness() brightness out of range (0-15)");
+        }
+
+        if (_debug) server.log("Brightness set to " + brightness);
         brightness = brightness + 224;
 
         // Write the new brightness value to the HT16K33
