@@ -4,13 +4,10 @@ Hardware driver for [Adafruit Bi-Color (Red/Green) 24-Bar Bargraph with I&sup2;C
 
 ## Release Notes
 
-### 1.0.1
-
-- Streamline brightness control as per other HT16K33 libraries.
-
-### 1.0.0
-
-- Initial release
+- 1.0.1
+    - Streamline brightness control as per other HT16K33 libraries.
+- 1.0.0
+    - Initial release
 
 ## Class Usage
 
