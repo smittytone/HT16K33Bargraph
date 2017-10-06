@@ -1,11 +1,11 @@
 // CONSTANTS
 // HT16K33 registers and HT16K33-specific variables
-const HT16K33_REGISTER_DISPLAY_ON  = "\x81";
-const HT16K33_REGISTER_DISPLAY_OFF = "\x80";
-const HT16K33_REGISTER_SYSTEM_ON   = "\x21";
-const HT16K33_REGISTER_SYSTEM_OFF  = "\x20";
-const HT16K33_DISPLAY_ADDRESS      = "\x00";
-const HT16K33_I2C_ADDRESS          =  0x70;
+const HT16K33_BAR_CLASS_REGISTER_DISPLAY_ON  = "\x81";
+const HT16K33_BAR_CLASS_REGISTER_DISPLAY_OFF = "\x80";
+const HT16K33_BAR_CLASS_REGISTER_SYSTEM_ON   = "\x21";
+const HT16K33_BAR_CLASS_REGISTER_SYSTEM_OFF  = "\x20";
+const HT16K33_BAR_CLASS_DISPLAY_ADDRESS      = "\x00";
+const HT16K33_BAR_CLASS_I2C_ADDRESS          =  0x70;
 
 // Convenience constants for bar colours
 const LED_OFF = 0;
@@ -148,7 +148,7 @@ class HT16K33Bargraph {
 
     function draw() {
         // Takes the contents of internal buffer and writes it to the LED matrix
-        local dataString = HT16K33_DISPLAY_ADDRESS;
+        local dataString = HT16K33_BAR_CLASS_DISPLAY_ADDRESS;
 
         for (local i = 0 ; i < 3 ; i++) {
             // Each _buffer entry is a 16-bit value - convert to two 8-bit values to write
@@ -182,13 +182,13 @@ class HT16K33Bargraph {
     }
 
     function powerDown() {
-        _led.write(_ledAddress, HT16K33_REGISTER_DISPLAY_OFF);
-        _led.write(_ledAddress, HT16K33_REGISTER_SYSTEM_OFF);
+        _led.write(_ledAddress, HT16K33_BAR_CLASS_REGISTER_DISPLAY_OFF);
+        _led.write(_ledAddress, HT16K33_BAR_CLASS_REGISTER_SYSTEM_OFF);
     }
 
     function powerUp() {
-        _led.write(_ledAddress, HT16K33_REGISTER_SYSTEM_ON);
-        _led.write(_ledAddress, HT16K33_REGISTER_DISPLAY_ON);
+        _led.write(_ledAddress, HT16K33_BAR_CLASS_REGISTER_SYSTEM_ON);
+        _led.write(_ledAddress, HT16K33_BAR_CLASS_REGISTER_DISPLAY_ON);
     }
 
     // ********** Private Functions - Do Not Call **********
