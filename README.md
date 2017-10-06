@@ -1,11 +1,13 @@
-# HT16K33Bargraph 1.0.1
+# HT16K33Bargraph 1.0.2
 
 Hardware driver for [Adafruit Bi-Color (Red/Green) 24-Bar Bargraph with I&sup2;C Backpack](https://www.adafruit.com/products/1721) based on the Holtek HT16K33 controller. The LED communicates over any imp I&sup2;C bus.
 
 ## Release Notes
 
+- 1.0.2
+    - Minor code change: rename constants to be class-specific
 - 1.0.1
-    - Streamline brightness control as per other HT16K33 libraries.
+    - Streamline brightness control as per other HT16K33 libraries
 - 1.0.0
     - Initial release
 

@@ -23,7 +23,7 @@ class HT16K33Bargraph {
     // Availibility: Device
     // Copyright (c) 2015-17 Tony Smith (@smittytone)
 
-    static VERSION = "1.0.1";
+    static VERSION = "1.0.2";
 
     // Class private properties
     _buffer = null;
