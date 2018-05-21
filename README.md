@@ -6,6 +6,7 @@ Hardware driver for [Adafruit Bi-Color (Red/Green) 24-Bar Bargraph with I&sup2;C
 
 - 1.0.3
     - Add support for [`seriallog.nut`](https://github.com/smittytone/generic/blob/master/seriallog.nut) to enable serial logging if the application makes use of it
+        - **Note** Class will log to *server.log()* if *seriallog* is not present
 - 1.0.2
     - Minor code change: rename constants to be class-specific
 - 1.0.1
