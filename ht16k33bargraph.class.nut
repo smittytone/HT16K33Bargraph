@@ -21,9 +21,9 @@ class HT16K33Bargraph {
     // https://www.adafruit.com/products/1721
     // Bus: I2C
     // Availibility: Device
-    // Copyright (c) 2015-17 Tony Smith (@smittytone)
+    // Copyright (c) 2015-18 Tony Smith (@smittytone)
 
-    static VERSION = "1.0.2";
+    static VERSION = "1.0.3";
 
     // Class private properties
     _buffer = null;
@@ -31,6 +31,7 @@ class HT16K33Bargraph {
     _ledAddress = null;
     _barZeroByChip = true;
     _debug = false;
+    _logger = null;
 
     constructor(i2cbus, i2cAddress = 0x70, debug = false) {
         // Parameters:
@@ -47,6 +48,11 @@ class HT16K33Bargraph {
         // Set the debugging flag
         if (typeof debug != "bool") debug = false;
         _debug = debug;
+
+        // Select logging target, which stored in '_logger', and will be 'seriallog' if 'seriallog.nut'
+        // has been loaded BEFORE HT16K33SegmentBig is instantiated on the device, otherwise it will be
+        // the imp API object 'server'
+        if ("seriallog" in getroottable()) { _logger = seriallog; } else { _logger = server; }
 
         // The buffer stores the colour values for each block of the bar
         _buffer = [0x0000, 0x0000, 0x0000];
@@ -93,12 +99,12 @@ class HT16K33Bargraph {
         // Returns: this
 
         if (barNumber < 0 || barNumber > 23) {
-            server.error("HT16K33Bargraph.fill() passed out of range (0-23) bar number");
+            _logger.error("HT16K33Bargraph.fill() passed out of range (0-23) bar number");
             return null;
         }
 
         if (ledColor < LED_OFF || ledColor > LED_GREEN) {
-            server.error("HT16K33Bargraph.fill() passed out of range (0-2) LED colour");
+            _logger.error("HT16K33Bargraph.fill() passed out of range (0-2) LED colour");
             return null;
         }
 
@@ -126,12 +132,12 @@ class HT16K33Bargraph {
         // Returns: this
 
         if (barNumber < 0 || barNumber > 23) {
-            server.error("HT16K33Bargraph.set() passed out of range (0-23) bar number");
+            _logger.error("HT16K33Bargraph.set() passed out of range (0-23) bar number");
             return null;
         }
 
         if (ledColor < LED_OFF || ledColor > LED_GREEN) {
-            if (_debug) server.error("HT16K33Bargraph.set() passed out of range (0-2) LED colour");
+            if (_debug) _logger.error("HT16K33Bargraph.set() passed out of range (0-2) LED colour");
             return null;
         }
 
@@ -166,15 +172,15 @@ class HT16K33Bargraph {
 
         if (brightness > 15) {
             brightness = 15;
-            if (_debug) server.error("HT16K33Matrix.setBrightness() brightness out of range (0-15)");
+            if (_debug) _logger.error("HT16K33Matrix.setBrightness() brightness out of range (0-15)");
         }
 
         if (brightness < 0) {
             brightness = 0;
-            if (_debug) server.error("HT16K33Matrix.setBrightness() brightness out of range (0-15)");
+            if (_debug) _logger.error("HT16K33Matrix.setBrightness() brightness out of range (0-15)");
         }
 
-        if (_debug) server.log("Brightness set to " + brightness);
+        if (_debug) _logger.log("Brightness set to " + brightness);
         brightness = brightness + 224;
 
         // Write the new brightness value to the HT16K33
