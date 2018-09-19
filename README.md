@@ -2,8 +2,10 @@
 
 Hardware driver for [Adafruit Bi-Color (Red/Green) 24-Bar Bargraph with I&sup2;C Backpack](https://www.adafruit.com/products/1721) based on the Holtek HT16K33 controller. The LED communicates over any imp I&sup2;C bus.
 
-## Release Notes
+## Release Notes ##
 
+- 1.0.4 &mdash; *In Development*
+    - Minor code changes
 - 1.0.3
     - Add support for [`seriallog.nut`](https://github.com/smittytone/generic/blob/master/seriallog.nut) to enable serial logging if the application makes use of it
         - **Note** Class will log to *server.log()* if *seriallog* is not present

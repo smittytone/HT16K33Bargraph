@@ -23,7 +23,7 @@ class HT16K33Bargraph {
     // Availibility: Device
     // Copyright (c) 2015-18 Tony Smith (@smittytone)
 
-    static VERSION = "1.0.3";
+    static VERSION = "1.0.4";
 
     // Class private properties
     _buffer = null;
@@ -33,7 +33,7 @@ class HT16K33Bargraph {
     _debug = false;
     _logger = null;
 
-    constructor(i2cbus, i2cAddress = 0x70, debug = false) {
+    constructor(i2cbus, i2cAddress = HT16K33_BAR_CLASS_I2C_ADDRESS, debug = false) {
         // Parameters:
         // 1. Whichever configured imp I2C bus is to be used for the HT16K33
         // 2. The I2C address from the datasheet (0x70)
