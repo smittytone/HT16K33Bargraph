@@ -121,7 +121,7 @@ The display can be turned on by calling *powerup()*.
 - 1.0.3 &mdash; *May 2018*
     - Add support for [`seriallog.nut`](https://github.com/smittytone/generic/blob/master/seriallog.nut) to enable serial logging if the application makes use of it
         - **Note** Class will log to *server.log()* if *seriallog* is not present
-- 1.0.2 &mdash; October 2017
+- 1.0.2 &mdash; *October 2017*
     - Minor code change: rename constants to be class-specific
 - 1.0.1 &mdash; *May 2017*
     - Streamline brightness control as per other HT16K33 libraries
