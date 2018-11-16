@@ -1,20 +1,6 @@
-# HT16K33Bargraph 1.0.3 #
+# HT16K33Bargraph 1.0.4 #
 
 Hardware driver for [Adafruit Bi-Color (Red/Green) 24-Bar Bargraph with I&sup2;C Backpack](https://www.adafruit.com/products/1721) based on the Holtek HT16K33 controller. The LED communicates over any imp I&sup2;C bus.
-
-## Release Notes ##
-
-- 1.0.4 &mdash; *In Development*
-    - Minor code changes
-- 1.0.3
-    - Add support for [`seriallog.nut`](https://github.com/smittytone/generic/blob/master/seriallog.nut) to enable serial logging if the application makes use of it
-        - **Note** Class will log to *server.log()* if *seriallog* is not present
-- 1.0.2
-    - Minor code change: rename constants to be class-specific
-- 1.0.1
-    - Streamline brightness control as per other HT16K33 libraries
-- 1.0.0
-    - Initial release
 
 ## Class Usage ##
 
@@ -128,8 +114,22 @@ The display can be turned off by calling *powerDown()*.
 
 The display can be turned on by calling *powerup()*.
 
+## Release Notes ##
+
+- 1.0.4 &mdash; *16 November 2018*
+    - Minor code changes
+- 1.0.3 &mdash; *May 2018*
+    - Add support for [`seriallog.nut`](https://github.com/smittytone/generic/blob/master/seriallog.nut) to enable serial logging if the application makes use of it
+        - **Note** Class will log to *server.log()* if *seriallog* is not present
+- 1.0.2 &mdash; October 2017
+    - Minor code change: rename constants to be class-specific
+- 1.0.1 &mdash; *May 2017*
+    - Streamline brightness control as per other HT16K33 libraries
+- 1.0.0
+    - Initial release
+
 ## License ##
 
 The HT16K33Bargraph class is licensed under the [MIT License](./LICENSE).
 
-Copyright &copy; Tony Smith, 2015-18.
+Copyright &copy; 2015-18 by Tony Smith.
