@@ -8,10 +8,11 @@ const HT16K33_BAR_CLASS_DISPLAY_ADDRESS      = "\x00";
 const HT16K33_BAR_CLASS_I2C_ADDRESS          =  0x70;
 
 // Convenience constants for bar colours
-const LED_OFF = 0;
-const LED_RED = 1;
-const LED_YELLOW = 2;
-const LED_GREEN = 3;
+const HT16K33_BAR_CLASS_LED_OFF = 0;
+const HT16K33_BAR_CLASS_LED_RED = 1;
+const HT16K33_BAR_CLASS_LED_YELLOW = 2;
+const HT16K33_BAR_CLASS_LED_AMBER = 2;
+const HT16K33_BAR_CLASS_LED_GREEN = 3;
 
 class HT16K33Bargraph {
 
@@ -23,7 +24,7 @@ class HT16K33Bargraph {
     // Availibility: Device
     // Copyright (c) 2015-18 Tony Smith (@smittytone)
 
-    static VERSION = "1.0.4";
+    static VERSION = "2.0.0";
 
     // Class private properties
     _buffer = null;
@@ -33,13 +34,15 @@ class HT16K33Bargraph {
     _debug = false;
     _logger = null;
 
-    constructor(i2cbus, i2cAddress = HT16K33_BAR_CLASS_I2C_ADDRESS, debug = false) {
+    constructor(i2cbus = null, i2cAddress = HT16K33_BAR_CLASS_I2C_ADDRESS, debug = false) {
         // Parameters:
-        // 1. Whichever configured imp I2C bus is to be used for the HT16K33
-        // 2. The I2C address from the datasheet (0x70)
-        // 3. Boolean, set/unset for debugging messages
+        //   1. Whichever configured imp I2C bus is to be used for the HT16K33
+        //   2. The I2C address from the datasheet (0x70)
+        //   3. Boolean, set/unset for debugging messages
+        // Returns:
+        //   The instance
 
-        if (i2cbus == null) throw "HT16K33Bar requires a non-null Imp I2C bus";
+        if (i2cbus == null) throw "HT16K33Bar() requires a non-null Imp I2C bus";
 
         // Save bar graph's I2C details
         _led = i2cbus;
@@ -68,7 +71,8 @@ class HT16K33Bargraph {
         //       ---------------------------
         //      bar number   0 . . . . . 23    barZeroByChip = true
         //      bar number   23 . . . . . 0    barZeroByChip = false
-        // Returns: nothing
+        // Returns:
+        //   The instance
 
         local t = typeof barZeroByChip;
 
@@ -88,15 +92,17 @@ class HT16K33Bargraph {
         // Set the brightness
         setBrightness(brightness);
 
+        // Return the instance
         return this;
     }
 
     function fill(barNumber, ledColor) {
         // Fills all the bars up to and including the specified bar with the specified color
         // Parameters:
-        //  1. Integer, the highest bar number to be lit (0-23)
-        //  2. Integer, the colour of the bar
-        // Returns: this
+        //   1. Integer, the highest bar number to be lit (0-23)
+        //   2. Integer, the colour of the bar
+        // Returns:
+        //   The instance
 
         if (barNumber < 0 || barNumber > 23) {
             _logger.error("HT16K33Bargraph.fill() passed out of range (0-23) bar number");
@@ -121,15 +127,17 @@ class HT16K33Bargraph {
             }
         }
 
+        // Return the instance
         return this;
     }
 
     function set(barNumber, ledColor) {
         // Sets a specified bar’s color (off, red, green or yellow)
         // Parameters:
-        //  1. Integer, the highest bar number to be lit (0-23); no default
-        //  2. Integer, the colour of the bar
-        // Returns: this
+        //   1. Integer, the highest bar number to be lit (0-23); no default
+        //   2. Integer, the colour of the bar
+        // Returns: 
+        //   The instance
 
         if (barNumber < 0 || barNumber > 23) {
             _logger.error("HT16K33Bargraph.set() passed out of range (0-23) bar number");
@@ -143,17 +151,26 @@ class HT16K33Bargraph {
 
         if (_barZeroByChip) barNumber = 23 - barNumber;
         _setBar(barNumber, ledColor);
+        
+        // Return the instance
         return this;
     }
 
     function clear() {
-        // Clears the _buffer, which is then written to the LED matrix
+        // Clears the buffer but does not write it to the LED
+        // Returns:
+        //   The instance
+
+        if (_debug) _logger.log("HT16K33Bargraph buffer cleared");
         _buffer = [0x0000, 0x0000, 0x0000];
         return this;
     }
 
     function draw() {
         // Takes the contents of internal buffer and writes it to the LED matrix
+        // Returns:
+        //   Nothing
+        
         local dataString = HT16K33_BAR_CLASS_DISPLAY_ADDRESS;
 
         for (local i = 0 ; i < 3 ; i++) {
@@ -165,8 +182,12 @@ class HT16K33Bargraph {
     }
 
     function setBrightness(brightness = 15) {
-        // Called when the app changes the brightness
-        // Default: 15
+        // Called to change the display brightness
+        // Parameters:
+        //   1. Integer, the brightness setting (0 - 15; default: 15)
+        // Returns:
+        //   Nothing
+        
         if (typeof brightness != "integer" && typeof brightness != "float") brightness = 15;
         brightness = brightness.tointeger();
 
@@ -187,12 +208,56 @@ class HT16K33Bargraph {
         _led.write(_ledAddress, brightness.tochar() + "\x00");
     }
 
+    function setDisplayFlash(flashRate = 0) {
+        // Parameters:
+        //    1. Flash rate in Herz. Must be 0.5, 1 or 2 for a flash, or 0 for no flash
+        // Returns:
+        //    Nothing
+
+        local values = [0, 2, 1, 0.5];
+        local match = -1;
+        foreach (i, value in values) {
+            if (value == flashRate) {
+                match = i;
+                break;
+            }
+        }
+
+        if (match == -1) {
+            _logger.error("HT16K33Bargraph.setDisplayFlash() invalid blink frequency (" + flashRate + ")");
+            return;
+        }
+
+        match = 0x81 + (match << 1);
+        _led.write(_ledAddress, match.tochar() + "\x00");
+        if (_debug) _logger.log(format("Display flash set to " + flashRate + " Hz"));
+    }
+    
+    function setDebug(state = true) {
+        // Enable or disable device debug logging
+        // Parameters:
+        //   1. Boolean, whether debug logging should be enabled. Default: true
+        // Returns:
+        //   Nothing
+
+        if (typeof state != "bool") state = true;
+        _debug = state;
+    }
+
     function powerDown() {
+        // Power off the display
+        // Returns:
+        //   Nothing
+        if (_debug) _logger.log("Powering HT16K33Bargraph down");
         _led.write(_ledAddress, HT16K33_BAR_CLASS_REGISTER_DISPLAY_OFF);
         _led.write(_ledAddress, HT16K33_BAR_CLASS_REGISTER_SYSTEM_OFF);
     }
 
     function powerUp() {
+        // Power on the display
+        // Returns:
+        //   Nothing
+        if (_debug) _logger.log("Powering HT16K33Bargraph up");
         _led.write(_ledAddress, HT16K33_BAR_CLASS_REGISTER_SYSTEM_ON);
         _led.write(_ledAddress, HT16K33_BAR_CLASS_REGISTER_DISPLAY_ON);
     }
@@ -202,35 +267,33 @@ class HT16K33Bargraph {
     function _setBar(barNumber, ledColor) {
         // Sets a specific bar to the specified color
         // Called by set() and fill()
-        local a = 999;
-        local b = 999;
-
-        if (barNumber < 12) {
-            a = barNumber / 4;
-        } else {
-            a = (barNumber - 12) / 4;
-        }
-
-        b = barNumber % 4;
+        // Parameters:
+        //   1. Integer, the chosen bar number (0 - 23)
+        //   2. Integer, the LED color (0 [off], 1 [red], 2 [yellow], 3 [green])
+        // Returns:
+        //   Nothing
+        local a = barNumber < 12 ? barNumber / 4 : (barNumber - 12) / 4;
+        local b = barNumber % 4;
+        
         if (barNumber >= 12) b = b + 4;
 
         a = a.tointeger();
         b = b.tointeger();
 
-        if (ledColor == LED_RED) {
+        if (ledColor == HT16K33_BAR_CLASS_LED_RED) {
             // Turn red LED on, green LED off
             _buffer[a] = _buffer[a] | (1 << b);
             _buffer[a] = _buffer[a] & ~(1 << (b + 8));
-        } else if (ledColor == LED_YELLOW) {
-            // Turn red and green LED on
-            _buffer[a] = _buffer[a] | (1 << b) | (1 << (b + 8));
-        } else if (ledColor == LED_OFF) {
-            // Turn red and green LED off
-            _buffer[a] = _buffer[a] & ~(1 << b) & ~(1 << (b + 8));
-        } else if (ledColor == LED_GREEN) {
+        } else if (ledColor == HT16K33_BAR_CLASS_LED_GREEN) {
             // Turn green LED on, red off
             _buffer[a] = _buffer[a] | (1 << (b + 8));
             _buffer[a] = _buffer[a] & ~(1 << b);
+        } else if (ledColor == HT16K33_BAR_CLASS_LED_YELLOW) {
+            // Turn red and green LED on
+            _buffer[a] = _buffer[a] | (1 << b) | (1 << (b + 8));
+        } else if (ledColor == HT16K33_BAR_CLASS_LED_OFF) {
+            // Turn red and green LED off
+            _buffer[a] = _buffer[a] & ~(1 << b) & ~(1 << (b + 8));
         }
     }
 }

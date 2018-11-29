@@ -1,4 +1,4 @@
-# HT16K33Bargraph 1.0.4 #
+# HT16K33Bargraph 2.0.0 #
 
 Hardware driver for [Adafruit Bi-Color (Red/Green) 24-Bar Bargraph with I&sup2;C Backpack](https://www.adafruit.com/products/1721) based on the Holtek HT16K33 controller. The LED communicates over any imp I&sup2;C bus.
 
@@ -24,7 +24,9 @@ bargraph <- HT16K33Bargraph(hardware.i2c89, 0x70, true);
 
 The class defines the following constants that you can use to specify bar colors (see *fill()* and *set()*):
 
-*HT16K33Bargraph.LED_OFF*, *HT16K33Bargraph.LED_RED*, *HT16K33Bargraph.LED_YELLOW* and *HT16K33Bargraph.LED_GREEN*.
+*HT16K33_BAR_CLASS_LED_OFF*, *HT16K33_BAR_CLASS_LED_RED*, *HT16K33_BAR_CLASS_LED_YELLOW*, *HT16K33_BAR_CLASS_LED_AMBER* and *HT16K33_BAR_CLASS_LED_GREEN*.
+
+**Note** From version 2.0.0, the constants are named differently. This is a breaking change.
 
 ## Class Methods ##
 
@@ -35,7 +37,7 @@ Call *init()* to set the matrix’s initial settings. All the parameters are opt
 - *brightness* sets the LED intensity (duty cycle) to an integer value between 0 (dim) and 15 (maximum); the default is 15.
 - *barZeroByChip* is a Boolean which allows you to indicate how you have oriented the board and therefore whether you want to count bars up from the end of the display nearest to the controller chip (`true`), or from the far end (`false`). The default value is `true`:
 
-```
+```squirrel
  ___________________________
 | o  [CHIP] [BARGRAPH LEDs] |
  ---------------------------
@@ -65,7 +67,7 @@ This method returns *this* so you can chain other methods. Note that *fill()* up
 ```squirrel
 function displayRain(data) {
     bargraph.clear()
-            .fill((23.0 * data.rain.tofloat()), HT16K33Bargraph.LED_AMBER)
+            .fill((23.0 * data.rain.tofloat()), HT16K33_BAR_CLASS_LED_YELLOW)
             .draw();
 }
 ```
@@ -80,7 +82,7 @@ This method returns *this* so you can chain other methods. Note that *set()* upd
 
 ```squirrel
 // Mark peak signal (0 - 1.0) in red
-bargraph.set((23 * signal), HT16K33Bargraph.LED_RED)
+bargraph.set((23 * signal), HT16K33_BAR_CLASS_LED_RED)
         .draw();
 }
 ```
@@ -91,11 +93,20 @@ Call *clear()* to clear the internal buffer. It does not update the LED itself &
 
 This method returns *this* so you can chain other methods.
 
+#### Example ####
+
+```squirrel
+// Clear the screen
+bargraph.clear()
+        .draw();
+}
+```
+
 ### draw() ###
 
-Call *draw()* to apply the changes you have made to the internal buffer to the LED.
+Call *draw()* to apply the changes you have made to the internal buffer to the LED. See the above methods for examples of its use.
 
-### setBrightness(*brightness*) ###
+### setBrightness(*[brightness]*) ###
 
 Call *setBrightness()* to set the matrix’s brightness (duty cycle) to a value between 0 (dim) and 15 (maximum). The value is optional; the matrix will be set to maximum brightness if no value is passed.
 
@@ -105,6 +116,21 @@ Call *setBrightness()* to set the matrix’s brightness (duty cycle) to a value 
 // Set the display brightness to 50%
 bargraph.setBrightness(8);
 ```
+
+### setDisplayFlash(*flashRate*) ###
+
+This method can be used to flash the display. The value passed into *flashRate* is the flash rate in Hertz. This value must be one of the following values, fixed by the HT16K33 controller: 0.5Hz, 1Hz or 2Hz. You can also pass in 0 to disable flashing, and this is the default value.
+
+#### Example ####
+
+```squirrel
+// Blink the display every second
+bargraph.setDisplayFlash(1);
+```
+
+### setDebug(*[state]*) ###
+
+Call this method to enable (*state* is `true`) or disable (*state* is `false`) device debug logging. The default value is `true`.
 
 ### powerDown() ###
 
@@ -116,6 +142,10 @@ The display can be turned on by calling *powerup()*.
 
 ## Release Notes ##
 
+- 2.0.0 &mdash; *Unreleased*
+    - Revise constants (hence breaking version jump)
+    - Add *setDisplayFlash()* method
+    - Add *setDebug()* method
 - 1.0.4 &mdash; *16 November 2018*
     - Minor code changes
 - 1.0.3 &mdash; *May 2018*
