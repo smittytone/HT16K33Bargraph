@@ -130,7 +130,7 @@ bargraph.setDisplayFlash(1);
 
 ### setDebug(*[state]*) ###
 
-Call this method to enable (*state* is `true`) or disable (*state* is `false`) device debug logging. The default value is `true`.
+Call this method to enable (*state* is `true`) or disable (*state* is `false`) the logging of extra device debugging information. The default value is `true`.
 
 ### powerDown() ###
 
