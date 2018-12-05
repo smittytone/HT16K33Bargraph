@@ -24,9 +24,13 @@ bargraph <- HT16K33Bargraph(hardware.i2c89, 0x70, true);
 
 The class defines the following constants that you can use to specify bar colors (see *fill()* and *set()*):
 
-*HT16K33_BAR_CLASS_LED_OFF*, *HT16K33_BAR_CLASS_LED_RED*, *HT16K33_BAR_CLASS_LED_YELLOW*, *HT16K33_BAR_CLASS_LED_AMBER* and *HT16K33_BAR_CLASS_LED_GREEN*.
+- *HT16K33_BAR_CLASS_LED_OFF*
+- *HT16K33_BAR_CLASS_LED_RED*
+- *HT16K33_BAR_CLASS_LED_YELLOW*
+- *HT16K33_BAR_CLASS_LED_AMBER*
+- *HT16K33_BAR_CLASS_LED_GREEN*
 
-**Note** From version 2.0.0, the constants are named differently. This is a breaking change.
+**Note** From version 2.0.0, the constants have been renamed. This is a **breaking change**.
 
 ## Class Methods ##
 
@@ -51,7 +55,7 @@ bar number   23 . . . . . 0    barZeroByChip = false
 // Set matrix to max brightness and position the LED vertically
 // with the controller chip at the top of the board, ie. 0 at
 // the bottom of the board
-led.init(15, false);
+bargraph.init(15, false);
 ```
 
 This method returns *this* so you can chain other methods.
@@ -67,7 +71,7 @@ This method returns *this* so you can chain other methods. Note that *fill()* up
 ```squirrel
 function displayRain(data) {
     bargraph.clear()
-            .fill((23.0 * data.rain.tofloat()), HT16K33_BAR_CLASS_LED_YELLOW)
+            .fill(23 * data.rain.tofloat(), HT16K33_BAR_CLASS_LED_YELLOW)
             .draw();
 }
 ```
@@ -84,7 +88,6 @@ This method returns *this* so you can chain other methods. Note that *set()* upd
 // Mark peak signal (0 - 1.0) in red
 bargraph.set((23 * signal), HT16K33_BAR_CLASS_LED_RED)
         .draw();
-}
 ```
 
 ### clear() ###
@@ -99,7 +102,6 @@ This method returns *this* so you can chain other methods.
 // Clear the screen
 bargraph.clear()
         .draw();
-}
 ```
 
 ### draw() ###
