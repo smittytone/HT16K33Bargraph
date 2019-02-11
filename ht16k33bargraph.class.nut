@@ -193,7 +193,7 @@ class HT16K33Bargraph {
             return null;
         }
 
-        if (ledColor < LED_OFF || ledColor > LED_GREEN) {
+        if (ledColor < HT16K33_BAR_CLASS_LED_OFF || ledColor > HT16K33_BAR_CLASS_LED_GREEN) {
             _logger.error("HT16K33Bargraph.fill() passed out of range (0-2) LED colour");
             return null;
         }
@@ -231,7 +231,7 @@ class HT16K33Bargraph {
             return null;
         }
 
-        if (ledColor < LED_OFF || ledColor > LED_GREEN) {
+        if (ledColor < HT16K33_BAR_CLASS_LED_OFF || ledColor > HT16K33_BAR_CLASS_LED_GREEN) {
             _logger.error("HT16K33Bargraph.set() passed out of range (0-2) LED colour");
             return null;
         }
