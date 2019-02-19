@@ -145,7 +145,7 @@ The display can be turned on by calling *powerup()*.
 ## Release Notes ##
 
 - 2.0.0 &mdash; *Unreleased*
-    - Revise constants (hence breaking version jump)
+    - Revise constants as an enumeration **breaking change**
     - Add *setDisplayFlash()* method
     - Add *setDebug()* method
 - 1.0.4 &mdash; *16 November 2018*

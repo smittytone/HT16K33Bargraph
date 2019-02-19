@@ -1,21 +1,25 @@
 /**
  * HT16K33 registers and HT16K33-specific variables
+ * 
+ * @enum
+ *
  */ 
-const HT16K33_BAR_CLASS_REGISTER_DISPLAY_ON  = "\x81";
-const HT16K33_BAR_CLASS_REGISTER_DISPLAY_OFF = "\x80";
-const HT16K33_BAR_CLASS_REGISTER_SYSTEM_ON   = "\x21";
-const HT16K33_BAR_CLASS_REGISTER_SYSTEM_OFF  = "\x20";
-const HT16K33_BAR_CLASS_DISPLAY_ADDRESS      = "\x00";
-const HT16K33_BAR_CLASS_I2C_ADDRESS          =  0x70;
-
-/**
- * Convenience constants for bar colours
- */
-const HT16K33_BAR_CLASS_LED_OFF = 0;
-const HT16K33_BAR_CLASS_LED_RED = 1;
-const HT16K33_BAR_CLASS_LED_YELLOW = 2;
-const HT16K33_BAR_CLASS_LED_AMBER = 2;
-const HT16K33_BAR_CLASS_LED_GREEN = 3;
+enum HT16K33_BAR_CLASS {
+        // Command registers
+        REGISTER_DISPLAY_ON  = "\x81",
+        REGISTER_DISPLAY_OFF = "\x80",
+        REGISTER_SYSTEM_ON   = "\x21",
+        REGISTER_SYSTEM_OFF  = "\x20",
+        // Display settings
+        DISPLAY_ADDRESS      = "\x00",
+        I2C_ADDRESS          =  0x70,
+        // Convenience constants for bar colours
+        LED_OFF              = 0,
+        LED_RED              = 1,
+        LED_YELLOW           = 2,
+        LED_AMBER            = 2,
+        LED_GREEN            = 3
+}
 
 /**
  * Squirrel class for 24-bar bi-color LED bargraph display driven by Holtek's HT16K33 controller, as used in the
@@ -57,7 +61,7 @@ class HT16K33Bargraph {
      *  
      *  @returns {instance} The instance
     */
-    constructor(i2cbus = null, i2cAddress = HT16K33_BAR_CLASS_I2C_ADDRESS, debug = false) {
+    constructor(i2cbus = null, i2cAddress = HT16K33_BAR_CLASS.I2C_ADDRESS, debug = false) {
         if (i2cbus == null) throw "HT16K33Bargraph() requires a non-null Imp I2C bus";
 
         // Save bar graph's I2C details
@@ -193,7 +197,7 @@ class HT16K33Bargraph {
             return null;
         }
 
-        if (ledColor < HT16K33_BAR_CLASS_LED_OFF || ledColor > HT16K33_BAR_CLASS_LED_GREEN) {
+        if (ledColor < HT16K33_BAR_CLASS.LED_OFF || ledColor > HT16K33_BAR_CLASS.LED_GREEN) {
             _logger.error("HT16K33Bargraph.fill() passed out of range (0-2) LED colour");
             return null;
         }
@@ -231,7 +235,7 @@ class HT16K33Bargraph {
             return null;
         }
 
-        if (ledColor < HT16K33_BAR_CLASS_LED_OFF || ledColor > HT16K33_BAR_CLASS_LED_GREEN) {
+        if (ledColor < HT16K33_BAR_CLASS.LED_OFF || ledColor > HT16K33_BAR_CLASS.LED_GREEN) {
             _logger.error("HT16K33Bargraph.set() passed out of range (0-2) LED colour");
             return null;
         }
@@ -260,7 +264,7 @@ class HT16K33Bargraph {
      *
     */
     function draw() {
-        local dataString = HT16K33_BAR_CLASS_DISPLAY_ADDRESS;
+        local dataString = HT16K33_BAR_CLASS.DISPLAY_ADDRESS;
 
         for (local i = 0 ; i < 3 ; i++) {
             // Each _buffer entry is a 16-bit value - convert to two 8-bit values to write
@@ -276,8 +280,8 @@ class HT16K33Bargraph {
     */
     function powerDown() {
         if (_debug) _logger.log("Powering HT16K33Bargraph down");
-        _led.write(_ledAddress, HT16K33_BAR_CLASS_REGISTER_DISPLAY_OFF);
-        _led.write(_ledAddress, HT16K33_BAR_CLASS_REGISTER_SYSTEM_OFF);
+        _led.write(_ledAddress, HT16K33_BAR_CLASS.REGISTER_DISPLAY_OFF);
+        _led.write(_ledAddress, HT16K33_BAR_CLASS.REGISTER_SYSTEM_OFF);
     }
 
     /**
@@ -286,8 +290,8 @@ class HT16K33Bargraph {
     */
     function powerUp() {
         if (_debug) _logger.log("Powering HT16K33Bargraph up");
-        _led.write(_ledAddress, HT16K33_BAR_CLASS_REGISTER_SYSTEM_ON);
-        _led.write(_ledAddress, HT16K33_BAR_CLASS_REGISTER_DISPLAY_ON);
+        _led.write(_ledAddress, HT16K33_BAR_CLASS.REGISTER_SYSTEM_ON);
+        _led.write(_ledAddress, HT16K33_BAR_CLASS.REGISTER_DISPLAY_ON);
     }
 
     // ********** Private Functions DO NOT CALL DIRECTLY **********
@@ -310,18 +314,18 @@ class HT16K33Bargraph {
         a = a.tointeger();
         b = b.tointeger();
 
-        if (ledColor == HT16K33_BAR_CLASS_LED_RED) {
+        if (ledColor == HT16K33_BAR_CLASS.LED_RED) {
             // Turn red LED on, green LED off
             _buffer[a] = _buffer[a] | (1 << b);
             _buffer[a] = _buffer[a] & ~(1 << (b + 8));
-        } else if (ledColor == HT16K33_BAR_CLASS_LED_GREEN) {
+        } else if (ledColor == HT16K33_BAR_CLASS.LED_GREEN) {
             // Turn green LED on, red off
             _buffer[a] = _buffer[a] | (1 << (b + 8));
             _buffer[a] = _buffer[a] & ~(1 << b);
-        } else if (ledColor == HT16K33_BAR_CLASS_LED_YELLOW) {
+        } else if (ledColor == HT16K33_BAR_CLASS.LED_YELLOW) {
             // Turn red and green LED on
             _buffer[a] = _buffer[a] | (1 << b) | (1 << (b + 8));
-        } else if (ledColor == HT16K33_BAR_CLASS_LED_OFF) {
+        } else if (ledColor == HT16K33_BAR_CLASS.LED_OFF) {
             // Turn red and green LED off
             _buffer[a] = _buffer[a] & ~(1 << b) & ~(1 << (b + 8));
         }
