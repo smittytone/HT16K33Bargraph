@@ -24,11 +24,11 @@ bargraph <- HT16K33Bargraph(hardware.i2c89, 0x70, true);
 
 The class defines the following constants that you can use to specify bar colors (see *fill()* and *set()*):
 
-- *HT16K33_BAR_CLASS_LED_OFF*
-- *HT16K33_BAR_CLASS_LED_RED*
-- *HT16K33_BAR_CLASS_LED_YELLOW*
-- *HT16K33_BAR_CLASS_LED_AMBER*
-- *HT16K33_BAR_CLASS_LED_GREEN*
+- *HT16K33_BAR_CLASS.LED_OFF*
+- *HT16K33_BAR_CLASS.LED_RED*
+- *HT16K33_BAR_CLASS.LED_YELLOW*
+- *HT16K33_BAR_CLASS.LED_AMBER*
+- *HT16K33_BAR_CLASS.LED_GREEN*
 
 **Note** From version 2.0.0, the constants have been renamed. This is a **breaking change**.
 

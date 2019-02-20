@@ -32,6 +32,7 @@ enum HT16K33_BAR_CLASS {
  * @license     MIT
  *
  * @class
+ *
  */
 class HT16K33Bargraph {
 
@@ -59,8 +60,9 @@ class HT16K33Bargraph {
      *  @param {integer}  [i2cAddress] - The HT16K33's I2C address. Default: 0x70
      *  @param {bool}     [debug ]     - Set/unset to log/silence extra debug messages. Default: false
      *  
-     *  @returns {instance} The instance
-    */
+     *  @returns {instance} this
+     *
+     */
     constructor(i2cbus = null, i2cAddress = HT16K33_BAR_CLASS.I2C_ADDRESS, debug = false) {
         if (i2cbus == null) throw "HT16K33Bargraph() requires a non-null Imp I2C bus";
 
@@ -75,7 +77,7 @@ class HT16K33Bargraph {
         // Select logging target, which stored in '_logger', and will be 'seriallog' if 'seriallog.nut'
         // has been loaded BEFORE HT16K33Bargraph is instantiated on the device, otherwise it will be
         // the imp API object 'server'
-        if ("seriallog" in getroottable()) { _logger = seriallog; } else { _logger = server; }
+        _logger = "seriallog" in getroottable() ? seriallog : server;
 
         // The buffer stores the colour values for each block of the bar
         _buffer = [0x0000, 0x0000, 0x0000];
@@ -94,8 +96,9 @@ class HT16K33Bargraph {
      *  @param {integer} brightness      - The initial display brightness, 1-15. Default: 15
      *  @param {bool}    [barZeroByChip] - Whether bar zero is at the chip end of the board (true) or at the far end. Default: true
      *  
-     *  @returns {instance} The instance
-    */
+     *  @returns {instance} this
+     *
+     */
     function init(brightness = 15, barZeroByChip = true) {
         local t = typeof barZeroByChip;
 
@@ -189,8 +192,9 @@ class HT16K33Bargraph {
      *  @param {integer} barNumber - The highest bar number to be lit. 0-23
      *  @param {integer} ledColor  - The colour of the bar (0 [off], 1 [red], 2 [yellow], 3 [green])
      *  
-     *  @returns {instance} The instance
-    */
+     *  @returns {instance} this
+     *
+     */
     function fill(barNumber, ledColor) {
         if (barNumber < 0 || barNumber > 23) {
             _logger.error("HT16K33Bargraph.fill() passed out of range (0-23) bar number");
@@ -227,8 +231,9 @@ class HT16K33Bargraph {
      *  @param {integer} barNumber - The bar number to be lit. 0-23
      *  @param {integer} ledColor  - The colour of the bar (0 [off], 1 [red], 2 [yellow], 3 [green])
      *  
-     *  @returns {instance} The instance
-    */
+     *  @returns {instance} this
+     *
+     */
     function set(barNumber, ledColor) {
         if (barNumber < 0 || barNumber > 23) {
             _logger.error("HT16K33Bargraph.set() passed out of range (0-23) bar number");
@@ -251,8 +256,9 @@ class HT16K33Bargraph {
     /**
      *  Clears the bargraph buffer
      *
-     *  @returns {instance} The instance
-    */
+     *  @returns {instance} this
+     *
+     */
     function clear() {
         if (_debug) _logger.log("HT16K33Bargraph buffer cleared");
         _buffer = [0x0000, 0x0000, 0x0000];
@@ -262,7 +268,7 @@ class HT16K33Bargraph {
     /**
      *  Writes the bargraph buffer out to the display itself
      *
-    */
+     */
     function draw() {
         local dataString = HT16K33_BAR_CLASS.DISPLAY_ADDRESS;
 
@@ -277,7 +283,7 @@ class HT16K33Bargraph {
     /**
      *  Turn the bargraph off
      * 
-    */
+     */
     function powerDown() {
         if (_debug) _logger.log("Powering HT16K33Bargraph down");
         _led.write(_ledAddress, HT16K33_BAR_CLASS.REGISTER_DISPLAY_OFF);
@@ -287,7 +293,7 @@ class HT16K33Bargraph {
     /**
      *  Turn the bargraph on
      * 
-    */
+     */
     function powerUp() {
         if (_debug) _logger.log("Powering HT16K33Bargraph up");
         _led.write(_ledAddress, HT16K33_BAR_CLASS.REGISTER_SYSTEM_ON);
@@ -304,7 +310,7 @@ class HT16K33Bargraph {
      *  @param {integer} barNumber - The chosen bar number (0 - 23)
      *  @param {integer} ledColor  - The LED color (0 [off], 1 [red], 2 [yellow], 3 [green])
      *
-    */
+     */
     function _setBar(barNumber, ledColor) {
         local a = barNumber < 12 ? barNumber / 4 : (barNumber - 12) / 4;
         local b = barNumber % 4;
